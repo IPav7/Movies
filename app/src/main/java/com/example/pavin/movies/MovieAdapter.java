@@ -42,7 +42,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyHolder> {
     public void onBindViewHolder(@NonNull final MyHolder holder, int position) {
         Movie movie = mMovies.get(position);
         holder.title.setText(movie.getName());
-        String rating = mContext.getString(R.string.rate) + movie.getRating();
+        String rating = mContext.getString(R.string.rate) + " " + movie.getRating();
         holder.rating.setText(rating);
         Glide.with(mContext).load(movie.getPicture()).into(holder.pic);
         holder.pic.setOnClickListener(new View.OnClickListener() {
@@ -85,10 +85,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyHolder> {
         public boolean onMenuItemClick(MenuItem item) {
             switch (item.getItemId()){
                 case R.id.add_favourite:
-                    Snackbar.make(mView, "Favourites", Snackbar.LENGTH_SHORT).show();
+                   // Snackbar.make(mView, "Favourites", Snackbar.LENGTH_SHORT).show();
                     return true;
                 case R.id.watch_later:
-                    Snackbar.make(mView, "Watch Later", Snackbar.LENGTH_SHORT).show();
+                   // Snackbar.make(mView, "Watch Later", Snackbar.LENGTH_SHORT).show();
                     return true;
             }
             return false;
