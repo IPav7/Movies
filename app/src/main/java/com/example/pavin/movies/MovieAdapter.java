@@ -25,10 +25,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyHolder> {
 
     private List<Movie> mMovies;
     private Context mContext;
+    private onMovieClickListener mMovieClickListener;
 
-    public MovieAdapter(Context context, List<Movie> movies) {
+    MovieAdapter(Context context, List<Movie> movies) {
         mContext = context;
         mMovies = movies;
+        try {
+            mMovieClickListener = (onMovieClickListener) context;
+        }
+        catch (ClassCastException e){
+            throw new ClassCastException(e.getMessage() + "   ... Activity must implement onMovieClickListener");
+        }
+    }
+
+    public interface onMovieClickListener{
+        void onClickMovie(Movie movie);
     }
 
     @NonNull
@@ -39,7 +50,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final MyHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MyHolder holder, final int position) {
         Movie movie = mMovies.get(position);
         holder.title.setText(movie.getName());
         String rating = mContext.getString(R.string.rate) + " " + movie.getRating();
@@ -49,6 +60,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MyHolder> {
             @Override
             public void onClick(View v) {
                 showPopupMenu(holder.pic);
+                mMovieClickListener.onClickMovie(mMovies.get(position));
             }
         });
     }

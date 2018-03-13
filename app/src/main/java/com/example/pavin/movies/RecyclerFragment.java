@@ -1,6 +1,7 @@
 package com.example.pavin.movies;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,11 +25,6 @@ public class RecyclerFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private MovieAdapter mMovieAdapter;
     private List<Movie> mMovies;
-    private onMovieClickListener mMovieClickListener;
-
-    public interface onMovieClickListener{
-        void onClick(Movie movie);
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,21 +33,17 @@ public class RecyclerFragment extends Fragment {
         prepareMovies();
     }
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof onMovieClickListener){
-            mMovieClickListener = (onMovieClickListener)activity;
-        }
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.content_main, container, false);
         mRecyclerView = root.findViewById(R.id.recycler_view);
         mMovieAdapter = new MovieAdapter(getActivity(), mMovies);
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
+        RecyclerView.LayoutManager layoutManager;
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
+            layoutManager = new GridLayoutManager(getActivity(), 2);
+        else
+            layoutManager = new GridLayoutManager(getActivity(), 1);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mMovieAdapter);

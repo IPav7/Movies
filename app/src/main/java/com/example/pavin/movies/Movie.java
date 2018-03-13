@@ -1,10 +1,12 @@
 package com.example.pavin.movies;
 
+import java.io.Serializable;
+
 /**
  * Created by pavin on 11.03.2018.
  */
 
-public class Movie {
+public class Movie implements Serializable {
 
     private String name;
     private int rating;

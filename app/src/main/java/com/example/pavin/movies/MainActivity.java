@@ -1,5 +1,8 @@
 package com.example.pavin.movies;
 
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -7,10 +10,11 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-public class MainActivity extends AppCompatActivity implements RecyclerFragment.onMovieClickListener {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.onMovieClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +22,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerFragment.
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        if(savedInstanceState == null){
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-            RecyclerFragment recyclerFragment = new RecyclerFragment();
-            fragmentTransaction.add(R.id.main_content, recyclerFragment);
-            fragmentTransaction.commit();
-        }
+       // if(findViewById(R.id.recycler_fragment) == null) {
+            if (savedInstanceState == null) {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                RecyclerFragment recyclerFragment = new RecyclerFragment();
+                fragmentTransaction.add(R.id.main_content, recyclerFragment);
+                fragmentTransaction.commit();
+            }
+      //  }
         initCollapsingToolbar();
         try{
             Glide.with(this).load(R.drawable.cover).into((ImageView)findViewById(R.id.backdrop));
@@ -32,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerFragment.
             e.printStackTrace();
         }
     }
-
-
 
     private void initCollapsingToolbar(){
         final CollapsingToolbarLayout toolbarLayout = findViewById(R.id.collapsing_toolbar);
@@ -60,8 +64,24 @@ public class MainActivity extends AppCompatActivity implements RecyclerFragment.
         });
     }
 
-    @Override
-    public void onClick(Movie movie) {
+    public void onClickMovie(Movie movie) {
+        Toast.makeText(this, movie.getName(), Toast.LENGTH_SHORT).show();
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+          /*  Intent intent = new Intent(this, class);
+            intent.putExtra("movie", movie);
+            startActivity(intent);*/
+        }
+        else{
 
+            DetailFragment detailFragment = (DetailFragment)getSupportFragmentManager().findFragmentById(R.id.detail_fragment);
+            if(detailFragment == null) {
+                detailFragment = DetailFragment.newInstance(movie);
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.linear_land, detailFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+            //else detailFragment.updateMovie(movie);
+        }
     }
 }
